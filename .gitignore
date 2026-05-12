@@ -1,0 +1,13 @@
+# PlatformIO 编译产生的临时文件
+.pio/
+.vscode/
+
+# Python 训练产生的缓存（针对你的 Jupyter Notebook）
+__pycache__/
+.ipynb_checkpoints/
+
+# macOS 系统产生的索引文件（你用的是 Mac，这个必写）
+.DS_Store
+
+# 本地数据缓存
+*.log

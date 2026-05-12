@@ -1,0 +1,36 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_ADXL345_U.h>
+
+Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified(12345);
+
+void setup() {
+    Serial.begin(115200);
+    while (!Serial) delay(10);
+    
+    Wire.begin(8, 9); // I2C 引脚
+    if(!accel.begin()) {
+        Serial.println("Error: ADXL345 not found!");
+        while(1);
+    }
+    accel.setRange(ADXL345_RANGE_16_G);
+    
+    // 打印 CSV 表头
+    Serial.println("timestamp,x,y,z");
+}
+
+void loop() {
+    sensors_event_t event;
+    accel.getEvent(&event);
+    
+    // 💥 基因对齐：换算为重力加速度 g
+    float raw_z = event.acceleration.z / 9.80665f; 
+    
+    // 打印格式：时间戳(秒), x, y, z
+    Serial.print(millis() / 1000.0, 3);
+    Serial.print(",0.000,0.000,"); // X和Y轴填0，保持你Colab格式的兼容
+    Serial.println(raw_z, 4);
+
+    delay(10); // 绝对精准的 10ms 采样时钟
+}
